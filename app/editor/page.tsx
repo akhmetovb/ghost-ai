@@ -1,6 +1,6 @@
 import { EditorLayout } from "@/components/editor/editor-layout"
 
-export default function Home() {
+export default function EditorPage() {
   return (
     <EditorLayout>
       <div className="flex flex-1 items-center justify-center">
