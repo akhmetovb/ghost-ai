@@ -16,6 +16,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - Feature 01: Design System — shadcn/ui (Radix + Nova preset) installed and configured, all 7 UI primitives added (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea), lucide-react installed, lib/utils.ts with cn() created, globals.css rewritten with full dark-only palette (shadcn semantic tokens + app design tokens), html carries `dark` class so shadcn dark variants are always active.
 - Feature 02: Editor Chrome — EditorNavbar (fixed top bar, sidebar toggle with PanelLeftOpen/PanelLeftClose icons, left/center/right sections) and ProjectSidebar (fixed overlay, slides in from left without pushing content, Projects header + close button, My Projects/Shared tabs with empty states, full-width New Project button). Dialog pattern ready via existing shadcn Dialog component.
 - Feature 03: Authentication — ClerkProvider with dark theme from @clerk/ui/themes wrapping root layout. proxy.ts at project root using clerkMiddleware and createRouteMatcher to protect all non-public routes. Sign-in and sign-up pages with two-panel layout (logo/tagline/feature list on left, Clerk form on right; form-only on mobile). Root page redirects authenticated users to /editor and unauthenticated users to /sign-in. UserButton added to editor navbar right section. app/editor/page.tsx created as the editor shell entry point.
+- Feature 04: Project dialogs — editor home screen (heading + New Project button), Create/Rename/Delete project dialogs, sidebar project list with rename/delete actions on owned projects, mobile backdrop scrim. useProjectDialogs hook owns dialog/form/loading state and mock project list. lib/mock-projects.ts holds MockProject type and slugify util.
 
 ## In Progress
 
@@ -23,7 +24,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Next Up
 
-- Feature 04: Canvas editor shell (React Flow).
+- Feature 05: Canvas editor shell (React Flow).
 
 ## Open Questions
 
