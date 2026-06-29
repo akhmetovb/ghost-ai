@@ -3,28 +3,27 @@
 import { X, Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { type MockProject } from "@/lib/mock-projects"
+import type { Project } from "@/lib/projects"
 
 interface ProjectSidebarProps {
   isOpen: boolean
-  projects: MockProject[]
+  ownedProjects: Project[]
+  sharedProjects: Project[]
   onClose: () => void
   onCreateProject: () => void
-  onRenameProject: (project: MockProject) => void
-  onDeleteProject: (project: MockProject) => void
+  onRenameProject: (project: Project) => void
+  onDeleteProject: (project: Project) => void
 }
 
 export function ProjectSidebar({
   isOpen,
-  projects,
+  ownedProjects,
+  sharedProjects,
   onClose,
   onCreateProject,
   onRenameProject,
   onDeleteProject,
 }: ProjectSidebarProps) {
-  const myProjects = projects.filter((p) => p.owned)
-  const sharedProjects = projects.filter((p) => !p.owned)
-
   return (
     <>
       {/* Mobile backdrop */}
@@ -66,11 +65,11 @@ export function ProjectSidebar({
             </TabsList>
 
             <TabsContent value="my-projects" className="mt-4 flex-1 overflow-y-auto">
-              {myProjects.length === 0 ? (
+              {ownedProjects.length === 0 ? (
                 <p className="text-center text-sm text-copy-muted">No projects yet</p>
               ) : (
                 <ul className="flex flex-col gap-0.5">
-                  {myProjects.map((project) => (
+                  {ownedProjects.map((project) => (
                     <li
                       key={project.id}
                       className="group flex items-center justify-between rounded-xl px-2 py-1.5 hover:bg-elevated"

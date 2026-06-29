@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { slugify, type MockProject } from "@/lib/mock-projects"
+import type { Project } from "@/lib/projects"
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,9 @@ import { DialogClose } from "@radix-ui/react-dialog"
 interface CreateProjectDialogProps {
   open: boolean
   nameValue: string
+  roomId: string
   isLoading: boolean
+  error: string | null
   onNameChange: (v: string) => void
   onSubmit: () => void
   onClose: () => void
@@ -28,13 +30,13 @@ interface CreateProjectDialogProps {
 export function CreateProjectDialog({
   open,
   nameValue,
+  roomId,
   isLoading,
+  error,
   onNameChange,
   onSubmit,
   onClose,
 }: CreateProjectDialogProps) {
-  const slug = slugify(nameValue)
-
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent>
@@ -53,13 +55,14 @@ export function CreateProjectDialog({
             autoFocus
           />
           <p className="min-h-4 text-xs text-copy-muted">
-            {slug ? (
+            {roomId ? (
               <>
-                Slug:{" "}
-                <span className="font-mono text-copy-secondary">{slug}</span>
+                Room ID:{" "}
+                <span className="font-mono text-copy-secondary">{roomId}</span>
               </>
             ) : null}
           </p>
+          {error && <p className="text-xs text-destructive">{error}</p>}
         </div>
         <DialogFooter>
           <DialogClose asChild>
@@ -83,9 +86,10 @@ export function CreateProjectDialog({
 
 interface RenameProjectDialogProps {
   open: boolean
-  targetProject: MockProject | null
+  targetProject: Project | null
   nameValue: string
   isLoading: boolean
+  error: string | null
   onNameChange: (v: string) => void
   onSubmit: () => void
   onClose: () => void
@@ -96,6 +100,7 @@ export function RenameProjectDialog({
   targetProject,
   nameValue,
   isLoading,
+  error,
   onNameChange,
   onSubmit,
   onClose,
@@ -119,13 +124,16 @@ export function RenameProjectDialog({
             </DialogDescription>
           )}
         </DialogHeader>
-        <Input
-          ref={inputRef}
-          placeholder="Project name"
-          value={nameValue}
-          onChange={(e) => onNameChange(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && onSubmit()}
-        />
+        <div className="flex flex-col gap-3">
+          <Input
+            ref={inputRef}
+            placeholder="Project name"
+            value={nameValue}
+            onChange={(e) => onNameChange(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && onSubmit()}
+          />
+          {error && <p className="text-xs text-destructive">{error}</p>}
+        </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" disabled={isLoading}>
@@ -148,8 +156,9 @@ export function RenameProjectDialog({
 
 interface DeleteProjectDialogProps {
   open: boolean
-  targetProject: MockProject | null
+  targetProject: Project | null
   isLoading: boolean
+  error: string | null
   onConfirm: () => void
   onClose: () => void
 }
@@ -158,6 +167,7 @@ export function DeleteProjectDialog({
   open,
   targetProject,
   isLoading,
+  error,
   onConfirm,
   onClose,
 }: DeleteProjectDialogProps) {
@@ -173,6 +183,7 @@ export function DeleteProjectDialog({
             </DialogDescription>
           )}
         </DialogHeader>
+        {error && <p className="text-xs text-destructive">{error}</p>}
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline" disabled={isLoading}>
