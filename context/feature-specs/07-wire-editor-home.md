@@ -49,10 +49,10 @@ Connect the hook to the sidebar and dialogs.
 - delete dialog shows project name
 
 
-### Check When Done
+### Check When it is Done
 
 - sidebar uses real project data
 - create navigates to workspace
 - rename updates correctly
 - delete refreshes or redirects correctly
-- `npm run build` passes
+- `npm run build` passes 
