@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Database layer complete. Moving to canvas editor.
+- Editor home wired to real API. Moving to canvas editor.
 
 ## Current Goal
 
-- Feature 06: Canvas editor shell (React Flow integration).
+- Feature 08: Canvas editor shell (React Flow integration).
 
 ## Completed
 
@@ -18,6 +18,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - Feature 03: Authentication — ClerkProvider with dark theme from @clerk/ui/themes wrapping root layout. proxy.ts at project root using clerkMiddleware and createRouteMatcher to protect all non-public routes. Sign-in and sign-up pages with two-panel layout (logo/tagline/feature list on left, Clerk form on right; form-only on mobile). Root page redirects authenticated users to /editor and unauthenticated users to /sign-in. UserButton added to editor navbar right section. app/editor/page.tsx created as the editor shell entry point.
 - Feature 04: Project dialogs — editor home screen (heading + New Project button), Create/Rename/Delete project dialogs, sidebar project list with rename/delete actions on owned projects, mobile backdrop scrim. useProjectDialogs hook owns dialog/form/loading state and mock project list. lib/mock-projects.ts holds MockProject type and slugify util.
 - Feature 05: Prisma data layer — prisma/models/project.prisma with Project (ownerId, name, description?, status enum DRAFT/ARCHIVED, canvasJsonPath?, timestamps, indexes on ownerId+createdAt) and ProjectCollaborator (projectId cascade, collaboratorEmail, createdAt, unique on project/email, indexes on email and project/date). lib/prisma.ts singleton branches on DATABASE_URL prefix: prisma+postgres:// → plain PrismaClient (Accelerate), otherwise → PrismaPg adapter. Global cache for hot-reload in dev. Migration SQL created at prisma/migrations/20260629000000_init_project_models/; client generated to app/generated/prisma. NOTE: migration not yet applied — database at pooled.db.prisma.io was unreachable; run `npx prisma migrate deploy` when connectivity is restored.
+- Feature 06: Project API routes — GET /api/projects (list owner's projects), POST /api/projects (create; defaults name to "Untitled Project"; accepts optional `id` to align with Liveblocks room ID), PATCH /api/projects/[projectId] (rename; 403 for non-owner), DELETE /api/projects/[projectId] (delete; 403 for non-owner). All routes return 401 for unauthenticated requests. Clerk `auth()` used server-side; ownership checked against `project.ownerId`.
+- Feature 07: Wire editor home to real API — `lib/projects.ts` helper fetches owned+shared projects server-side; `app/editor/page.tsx` is an async server component; `EditorHome` client component owns sidebar/dialog interactivity; `useProjectActions` hook (create calls POST with client-generated room ID → navigate to workspace, rename calls PATCH → refresh, delete calls DELETE → redirect or refresh); `slugify` added to `lib/utils.ts`; sidebar and dialogs typed against `Project` from `lib/projects.ts`; create dialog shows live room ID preview.
 
 ## In Progress
 
@@ -25,7 +27,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Next Up
 
-- Feature 06: Canvas editor shell (React Flow).
+- Feature 08: Canvas editor shell (React Flow).
 
 ## Open Questions
 
