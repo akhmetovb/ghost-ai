@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { X, Plus, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
@@ -9,6 +10,7 @@ interface ProjectSidebarProps {
   isOpen: boolean
   ownedProjects: Project[]
   sharedProjects: Project[]
+  activeProjectId?: string
   onClose: () => void
   onCreateProject: () => void
   onRenameProject: (project: Project) => void
@@ -19,11 +21,17 @@ export function ProjectSidebar({
   isOpen,
   ownedProjects,
   sharedProjects,
+  activeProjectId,
   onClose,
   onCreateProject,
   onRenameProject,
   onDeleteProject,
 }: ProjectSidebarProps) {
+  const defaultTab =
+    activeProjectId && !ownedProjects.some((p) => p.id === activeProjectId)
+      ? "shared"
+      : "my-projects"
+
   return (
     <>
       {/* Mobile backdrop */}
@@ -54,7 +62,7 @@ export function ProjectSidebar({
         </div>
 
         <div className="flex flex-1 flex-col overflow-hidden p-3">
-          <Tabs defaultValue="my-projects" className="flex h-full flex-col">
+          <Tabs defaultValue={defaultTab} className="flex h-full flex-col">
             <TabsList className="w-full">
               <TabsTrigger value="my-projects" className="flex-1">
                 My Projects
@@ -72,12 +80,24 @@ export function ProjectSidebar({
                   {ownedProjects.map((project) => (
                     <li
                       key={project.id}
-                      className="group flex items-center justify-between rounded-xl px-2 py-1.5 hover:bg-elevated"
+                      className={`group flex items-center justify-between rounded-xl hover:bg-elevated ${
+                        activeProjectId === project.id ? "bg-elevated" : ""
+                      }`}
                     >
-                      <span className="truncate text-sm text-copy-primary">
-                        {project.name}
-                      </span>
-                      <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+                      <Link
+                        href={`/editor/${project.id}`}
+                        className="flex min-w-0 flex-1 items-center gap-2 px-2 py-1.5"
+                      >
+                        {activeProjectId === project.id ? (
+                          <span className="h-2 w-2 shrink-0 rounded-full bg-brand" />
+                        ) : (
+                          <span className="h-2 w-2 shrink-0 rounded-full bg-transparent" />
+                        )}
+                        <span className={`truncate text-sm ${activeProjectId === project.id ? "font-medium text-copy-primary" : "text-copy-primary"}`}>
+                          {project.name}
+                        </span>
+                      </Link>
+                      <div className="flex shrink-0 items-center gap-0.5 pr-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
                         <Button
                           variant="ghost"
                           size="icon-sm"
@@ -111,11 +131,23 @@ export function ProjectSidebar({
                   {sharedProjects.map((project) => (
                     <li
                       key={project.id}
-                      className="flex items-center rounded-xl px-2 py-1.5 hover:bg-elevated"
+                      className={`rounded-xl hover:bg-elevated ${
+                        activeProjectId === project.id ? "bg-elevated" : ""
+                      }`}
                     >
-                      <span className="truncate text-sm text-copy-primary">
-                        {project.name}
-                      </span>
+                      <Link
+                        href={`/editor/${project.id}`}
+                        className="flex items-center gap-2 px-2 py-1.5"
+                      >
+                        {activeProjectId === project.id ? (
+                          <span className="h-2 w-2 shrink-0 rounded-full bg-brand" />
+                        ) : (
+                          <span className="h-2 w-2 shrink-0 rounded-full bg-transparent" />
+                        )}
+                        <span className="truncate text-sm text-copy-primary">
+                          {project.name}
+                        </span>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -126,8 +158,7 @@ export function ProjectSidebar({
 
         <div className="shrink-0 border-t border-border p-3">
           <Button
-            variant="outline"
-            className="w-full gap-2"
+            className="w-full gap-2 bg-brand text-base hover:bg-brand/90"
             onClick={onCreateProject}
           >
             <Plus className="h-4 w-4" />

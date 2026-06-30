@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Editor home wired to real API. Moving to canvas editor.
+- Share dialog implemented. Moving to canvas integration.
 
 ## Current Goal
 
-- Feature 08: Canvas editor shell (React Flow integration).
+- Feature 10: React Flow canvas integration.
 
 ## Completed
 
@@ -20,6 +20,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - Feature 05: Prisma data layer — prisma/models/project.prisma with Project (ownerId, name, description?, status enum DRAFT/ARCHIVED, canvasJsonPath?, timestamps, indexes on ownerId+createdAt) and ProjectCollaborator (projectId cascade, collaboratorEmail, createdAt, unique on project/email, indexes on email and project/date). lib/prisma.ts singleton branches on DATABASE_URL prefix: prisma+postgres:// → plain PrismaClient (Accelerate), otherwise → PrismaPg adapter. Global cache for hot-reload in dev. Migration SQL created at prisma/migrations/20260629000000_init_project_models/; client generated to app/generated/prisma. NOTE: migration not yet applied — database at pooled.db.prisma.io was unreachable; run `npx prisma migrate deploy` when connectivity is restored.
 - Feature 06: Project API routes — GET /api/projects (list owner's projects), POST /api/projects (create; defaults name to "Untitled Project"; accepts optional `id` to align with Liveblocks room ID), PATCH /api/projects/[projectId] (rename; 403 for non-owner), DELETE /api/projects/[projectId] (delete; 403 for non-owner). All routes return 401 for unauthenticated requests. Clerk `auth()` used server-side; ownership checked against `project.ownerId`.
 - Feature 07: Wire editor home to real API — `lib/projects.ts` helper fetches owned+shared projects server-side; `app/editor/page.tsx` is an async server component; `EditorHome` client component owns sidebar/dialog interactivity; `useProjectActions` hook (create calls POST with client-generated room ID → navigate to workspace, rename calls PATCH → refresh, delete calls DELETE → redirect or refresh); `slugify` added to `lib/utils.ts`; sidebar and dialogs typed against `Project` from `lib/projects.ts`; create dialog shows live room ID preview.
+- Feature 08: Editor workspace shell — `app/editor/[roomId]/page.tsx` server component with auth redirect and access check; `lib/project-access.ts` with `getCurrentIdentity` and `getProjectWithAccess` helpers; `components/editor/access-denied.tsx` (lock icon, message, back link); `components/editor/workspace-navbar.tsx` (project name, share button, AI sidebar toggle, UserButton); `components/editor/workspace-shell.tsx` client component (left sidebar with active project highlighted, canvas placeholder, slide-over AI sidebar placeholder); `ProjectSidebar` extended with optional `activeProjectId` prop.
+- Feature 09: Share dialog — `GET/POST /api/projects/[projectId]/collaborators` (list + invite, Clerk-enriched names/avatars) and `DELETE /api/projects/[projectId]/collaborators/[email]` (remove, owner-only); `components/editor/share-dialog.tsx` (owner view: invite input, collaborator list with avatars, remove buttons, copy-link with Copied! feedback; collaborator view: read-only list); `getProjectWithAccess` extended to return `isOwner`; Share button in navbar wired to open dialog.
 
 ## In Progress
 
@@ -27,7 +29,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Next Up
 
-- Feature 08: Canvas editor shell (React Flow).
+- Feature 10: React Flow canvas integration.
 
 ## Open Questions
 
